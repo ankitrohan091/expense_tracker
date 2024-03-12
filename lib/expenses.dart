@@ -1,4 +1,5 @@
 import 'package:expense_tracker/add_expense.dart';
+import 'package:expense_tracker/chart.dart';
 import 'package:expense_tracker/expense_item.dart';
 import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,12 @@ final List<Expense> list = [
       amount: 1999.00,
       date: DateTime(2024, 9, 02, 22, 56),
       category: Category.work),
+  Expense(
+    title: "Patiala Company Visited",
+    amount: 500,
+    date: DateTime(2024,03,03),
+    category: Category.travel
+  ),
   Expense(
       title: "Crakk Movie",
       amount: 500,
@@ -75,8 +82,9 @@ class _ExpensesState extends State<Expenses> {
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Graph'),
+              Chart(expenses: list,),
               Expanded(
                 child: list.isNotEmpty?ListView.builder(
                     itemCount: list.length,
@@ -96,6 +104,9 @@ class _ExpensesState extends State<Expenses> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
+                    iconSize: 32,
+                    hoverColor: Theme.of(context).colorScheme.onInverseSurface,
+                    highlightColor: Theme.of(context).colorScheme.onPrimaryContainer,
                     onPressed: addExpenses,
                     icon: const Icon(Icons.add_sharp),
                   ),
