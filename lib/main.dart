@@ -24,7 +24,7 @@ void main() {
               titleLarge: TextStyle(
                   fontSize: 16,
                   color: kColorScheme.onSecondaryContainer,
-                  fontWeight: FontWeight.bold)),
+                  fontWeight: FontWeight.bold),),
           cardTheme: const CardTheme().copyWith(
             color: kColorScheme.secondaryContainer,
             margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),

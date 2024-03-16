@@ -3,8 +3,9 @@ import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
 
 class Chart extends StatelessWidget {
+  final double height;
   final List<Expense> expenses;
-  const Chart({super.key, required this.expenses});
+  const Chart({super.key, required this.height, required this.expenses});
 
   List<ExpenseBucket> get buckets {
     return [
@@ -33,7 +34,7 @@ class Chart extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 13),
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       width: double.infinity,
-      height: 180,
+      height: height,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           gradient: LinearGradient(
@@ -52,7 +53,7 @@ class Chart extends StatelessWidget {
               children: [
                 for (final bucket in buckets)
                   ChartBar(
-                    fill: bucket.totalExpense / maxExpenses,
+                    fill: maxExpenses==0?0:bucket.totalExpense / maxExpenses,
                   ),
               ],
             ),
