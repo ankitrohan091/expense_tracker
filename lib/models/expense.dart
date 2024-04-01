@@ -17,7 +17,7 @@ class Expense{
   required this.category}):id=uuid.v4();
   final String id;
   final String title;
-  final num amount;
+  final double amount;
   final DateTime date;
   final Category category;
 }

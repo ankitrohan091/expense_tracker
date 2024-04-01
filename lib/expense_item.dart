@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 class Item extends StatelessWidget {
   Item(this.expenseItem, {super.key});
   final Expense expenseItem;
-  final dateFormatter = DateFormat('dd/MM/yyyy');
+  final dateFormatter = DateFormat('yyyy-MM-dd');
   @override
   Widget build(context) {
     return Card(

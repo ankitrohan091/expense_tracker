@@ -1,81 +1,46 @@
 import 'package:expense_tracker/add_expense.dart';
 import 'package:expense_tracker/chart.dart';
 import 'package:expense_tracker/expense_item.dart';
-import 'package:expense_tracker/models/expense.dart';
+import 'package:expense_tracker/provider/expense_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Expenses extends StatefulWidget {
+class Expenses extends ConsumerStatefulWidget {
   const Expenses({super.key});
   @override
-  State<Expenses> createState() {
+  ConsumerState<Expenses> createState() {
     return _ExpensesState();
   }
 }
 
-final List<Expense> list = [
-  Expense(
-      title: "Flutter Course",
-      amount: 1999.00,
-      date: DateTime(2024, 9, 02, 22, 56),
-      category: Category.work),
-  Expense(
-      title: "Patiala Company Visited",
-      amount: 500,
-      date: DateTime(2024, 03, 03),
-      category: Category.travel),
-  Expense(
-      title: "Crakk Movie",
-      amount: 500,
-      date: DateTime.now(),
-      category: Category.leisure),
-  Expense(
-    title: "Resturant on Saturday Night",
-    amount: 150,
-    date: DateTime(2024, 03, 09, 20, 00),
-    category: Category.food,
-  )
-];
+// final List<Expense> list = [
+//   Expense(
+//       title: "Flutter Course",
+//       amount: 1999.00,
+//       date: DateTime(2024, 9, 02, 22, 56),
+//       category: Category.work),
+//   Expense(
+//       title: "Patiala Company Visited",
+//       amount: 500,
+//       date: DateTime(2024, 03, 03),
+//       category: Category.travel),
+//   Expense(
+//       title: "Crakk Movie",
+//       amount: 500,
+//       date: DateTime.now(),
+//       category: Category.leisure),
+//   Expense(
+//     title: "Resturant on Saturday Night",
+//     amount: 150,
+//     date: DateTime(2024, 03, 09, 20, 00),
+//     category: Category.food,
+//   )
+// ];
 
-class _ExpensesState extends State<Expenses> {
-  void addNewExpenseInList(Expense obj) {
-    setState(() {
-      list.add(obj);
-    });
-  }
-
-  void removeExpenseFromList(Expense obj) {
-    int index = list.indexOf(obj);
-    setState(() {
-      list.remove(obj);
-    });
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Expense Deleted!'),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {
-            setState(() {
-              list.insert(index, obj);
-            });
-          },
-        ),
-      ),
-    );
-  }
-
-  void addExpenses() {
-    showModalBottomSheet(
-        useSafeArea: true,
-        context: context,
-        isScrollControlled: true,
-        builder: (ctx) {
-          return AddExpense(addNewExpenseInList);
-        });
-  }
-
+class _ExpensesState extends ConsumerState<Expenses> {
   @override
   Widget build(context) {
+    final list = ref.watch(expenseListProvider);
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
@@ -105,15 +70,29 @@ class _ExpensesState extends State<Expenses> {
                                   ),
                                   key: ValueKey(list[index]),
                                   onDismissed: (direction) {
-                                    removeExpenseFromList(list[index]);
+                                    final obj = list[index];
+                                    list.remove(obj);
+                                    ScaffoldMessenger.of(context)
+                                        .clearSnackBars();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: const Text('Expense Deleted!'),
+                                        action: SnackBarAction(
+                                          label: 'Undo',
+                                          onPressed: () {
+                                            list.insert(index, obj);
+                                          },
+                                        ),
+                                      ),
+                                    );
                                     direction = DismissDirection.horizontal;
                                   },
                                   child: Item(list[index]),
                                 );
                               })
-                          : const Center(
+                          : Center(
                               child:
-                                  Text('No Expenses found. Start Adding Some!'),
+                                  Text('No Expenses found. Start Adding Some!',style: Theme.of(context).textTheme.bodyLarge,),
                             ),
                     ),
                     Row(
@@ -125,7 +104,15 @@ class _ExpensesState extends State<Expenses> {
                               Theme.of(context).colorScheme.onInverseSurface,
                           highlightColor:
                               Theme.of(context).colorScheme.onPrimaryContainer,
-                          onPressed: addExpenses,
+                          onPressed: () {
+                            showModalBottomSheet(
+                                useSafeArea: true,
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (ctx) {
+                                  return const AddExpense();
+                                });
+                          },
                           icon: const Icon(Icons.add_sharp),
                         ),
                       ],
@@ -154,7 +141,21 @@ class _ExpensesState extends State<Expenses> {
                                   ),
                                   key: ValueKey(list[index]),
                                   onDismissed: (direction) {
-                                    removeExpenseFromList(list[index]);
+                                    final obj = list[index];
+                                    list.remove(obj);
+                                    ScaffoldMessenger.of(context)
+                                        .clearSnackBars();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: const Text('Expense Deleted!'),
+                                        action: SnackBarAction(
+                                          label: 'Undo',
+                                          onPressed: () {
+                                            list.insert(index, obj);
+                                          },
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Item(list[index]),
                                 );
@@ -177,7 +178,16 @@ class _ExpensesState extends State<Expenses> {
                               highlightColor: Theme.of(context)
                                   .colorScheme
                                   .onPrimaryContainer,
-                              onPressed: addExpenses,
+                              onPressed: () {
+                                showModalBottomSheet(
+                                    useSafeArea: true,
+                                    context: context,
+                                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                                    isScrollControlled: true,
+                                    builder: (ctx) {
+                                      return const AddExpense();
+                                    });
+                              },
                               icon: const Icon(Icons.add_sharp),
                             ),
                           ],
