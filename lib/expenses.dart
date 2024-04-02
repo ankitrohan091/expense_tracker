@@ -13,36 +13,13 @@ class Expenses extends ConsumerStatefulWidget {
   }
 }
 
-// final List<Expense> list = [
-//   Expense(
-//       title: "Flutter Course",
-//       amount: 1999.00,
-//       date: DateTime(2024, 9, 02, 22, 56),
-//       category: Category.work),
-//   Expense(
-//       title: "Patiala Company Visited",
-//       amount: 500,
-//       date: DateTime(2024, 03, 03),
-//       category: Category.travel),
-//   Expense(
-//       title: "Crakk Movie",
-//       amount: 500,
-//       date: DateTime.now(),
-//       category: Category.leisure),
-//   Expense(
-//     title: "Resturant on Saturday Night",
-//     amount: 150,
-//     date: DateTime(2024, 03, 09, 20, 00),
-//     category: Category.food,
-//   )
-// ];
-
 class _ExpensesState extends ConsumerState<Expenses> {
   @override
   Widget build(context) {
     final list = ref.watch(expenseListProvider);
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.onInverseSurface,
         appBar: AppBar(
           title: const Text('Expense Tracker'),
         ),
@@ -71,7 +48,9 @@ class _ExpensesState extends ConsumerState<Expenses> {
                                   key: ValueKey(list[index]),
                                   onDismissed: (direction) {
                                     final obj = list[index];
-                                    list.remove(obj);
+                                    ref
+                                        .watch(expenseListProvider.notifier)
+                                        .removeExpense(obj);
                                     ScaffoldMessenger.of(context)
                                         .clearSnackBars();
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -80,7 +59,10 @@ class _ExpensesState extends ConsumerState<Expenses> {
                                         action: SnackBarAction(
                                           label: 'Undo',
                                           onPressed: () {
-                                            list.insert(index, obj);
+                                            ref
+                                                .watch(expenseListProvider
+                                                    .notifier)
+                                                .addExpense(obj);
                                           },
                                         ),
                                       ),
@@ -91,8 +73,10 @@ class _ExpensesState extends ConsumerState<Expenses> {
                                 );
                               })
                           : Center(
-                              child:
-                                  Text('No Expenses found. Start Adding Some!',style: Theme.of(context).textTheme.bodyLarge,),
+                              child: Text(
+                                'No Expenses found. Start Adding Some!',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
                             ),
                     ),
                     Row(
@@ -113,7 +97,8 @@ class _ExpensesState extends ConsumerState<Expenses> {
                                   return const AddExpense();
                                 });
                           },
-                          icon: const Icon(Icons.add_sharp),
+                          icon: Icon(Icons.add_sharp,
+                              color: Theme.of(context).colorScheme.error),
                         ),
                       ],
                     ),
@@ -142,7 +127,9 @@ class _ExpensesState extends ConsumerState<Expenses> {
                                   key: ValueKey(list[index]),
                                   onDismissed: (direction) {
                                     final obj = list[index];
-                                    list.remove(obj);
+                                    ref
+                                        .read(expenseListProvider.notifier)
+                                        .removeExpense(obj);
                                     ScaffoldMessenger.of(context)
                                         .clearSnackBars();
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -151,7 +138,10 @@ class _ExpensesState extends ConsumerState<Expenses> {
                                         action: SnackBarAction(
                                           label: 'Undo',
                                           onPressed: () {
-                                            list.insert(index, obj);
+                                            ref
+                                                .read(expenseListProvider
+                                                    .notifier)
+                                                .addExpense(obj);
                                           },
                                         ),
                                       ),
@@ -182,7 +172,9 @@ class _ExpensesState extends ConsumerState<Expenses> {
                                 showModalBottomSheet(
                                     useSafeArea: true,
                                     context: context,
-                                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .secondaryContainer,
                                     isScrollControlled: true,
                                     builder: (ctx) {
                                       return const AddExpense();

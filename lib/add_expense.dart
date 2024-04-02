@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/models/expense.dart';
+import 'package:uuid/uuid.dart';
 
 class AddExpense extends ConsumerStatefulWidget {
   const AddExpense({super.key});
@@ -63,9 +64,10 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
               );
             });
       }
-    } else{
+    } else {
       Navigator.pop(context);
       await ref.read(expenseListProvider.notifier).addExpense(Expense(
+          id: const Uuid().v4(),
           title: titleController.text,
           amount: enteredAmount,
           category: selectedCategory!,
@@ -86,10 +88,16 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
         children: [
           Expanded(
             child: TextField(
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w500),
               controller: titleController,
               maxLength: 50,
-              decoration: const InputDecoration(label: Text('Title')),
+              decoration: InputDecoration(
+                  label: const Text('Title'),
+                  labelStyle: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).colorScheme.onBackground)),
             ),
           ),
           const SizedBox(
@@ -97,23 +105,28 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
           ),
           Expanded(
             child: TextField(
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w500),
               controller: amountController,
               maxLength: 15,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                  label: Text('Enter Amount'),
-                  prefixIcon: Icon(Icons.currency_rupee_sharp)),
+              decoration: InputDecoration(
+                  label: const Text('Enter Amount'),
+                  labelStyle: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).colorScheme.onBackground),
+                  prefixIcon: const Icon(Icons.currency_rupee_sharp)),
             ),
           ),
         ],
       ),
       Row(
         children: [
-          Text(
-            'Category : ',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+          Text('Category : ',
+              style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.onBackground)),
           const SizedBox(
             width: 3,
           ),
@@ -123,8 +136,12 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
               items: Category.values
                   .map((e) => DropdownMenuItem(
                       value: e,
-                      child: Text(e.name.toUpperCase(),
-                          style: Theme.of(context).textTheme.bodyLarge)))
+                      child: Text(
+                        e.name.toUpperCase(),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontWeight: FontWeight.w500),
+                      )))
                   .toList(),
               onChanged: (value) => setState(() {
                     selectedCategory = value;
@@ -132,7 +149,13 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
           Expanded(
             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               IconButton(
-                  icon: const Icon(Icons.calendar_month_sharp),
+                  icon: const Icon(
+                    Icons.calendar_month_sharp,
+                  ),
+                  style: IconButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.background,
+                      foregroundColor:
+                          Theme.of(context).colorScheme.onBackground),
                   onPressed: () async {
                     final date = await showDatePicker(
                         context: context,
@@ -145,7 +168,9 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
                   }),
               Text(
                 formatter.format(enteredDate),
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.w500),
               ),
             ]),
           )
@@ -181,22 +206,33 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
   List<Widget> smallWidth() {
     return [
       TextField(
-        style: Theme.of(context).textTheme.bodyLarge,
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.w500),
         controller: titleController,
         maxLength: 50,
-        decoration: const InputDecoration(label: Text('Title')),
+        decoration: InputDecoration(
+            label: const Text('Title'),
+            labelStyle: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).colorScheme.onBackground)),
       ),
       Row(
         children: [
           Expanded(
             child: TextField(
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w500),
               controller: amountController,
               maxLength: 15,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                  label: Text('Enter Amount'),
-                  prefixIcon: Icon(Icons.currency_rupee_sharp)),
+              decoration: InputDecoration(
+                  label: const Text('Enter Amount'),
+                  labelStyle: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).colorScheme.onBackground),
+                  prefixIcon: const Icon(Icons.currency_rupee_sharp)),
             ),
           ),
           const SizedBox(
@@ -205,7 +241,13 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
           Expanded(
             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               IconButton(
-                  icon: const Icon(Icons.calendar_month_sharp),
+                  icon: const Icon(
+                    Icons.calendar_month_sharp,
+                  ),
+                  style: IconButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.background,
+                      foregroundColor:
+                          Theme.of(context).colorScheme.onBackground),
                   onPressed: () async {
                     final date = await showDatePicker(
                         context: context,
@@ -218,17 +260,19 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
                   }),
               Text(
                 formatter.format(enteredDate),
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.w500),
               ),
             ]),
           ),
         ],
       ),
       Row(children: [
-        Text(
-          'Category : ',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        Text('Category : ',
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).colorScheme.onBackground)),
         const SizedBox(
           width: 3,
         ),
@@ -238,8 +282,12 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
             items: Category.values
                 .map((e) => DropdownMenuItem(
                     value: e,
-                    child: Text(e.name.toUpperCase(),
-                        style: Theme.of(context).textTheme.bodyLarge)))
+                    child: Text(
+                      e.name.toUpperCase(),
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontWeight: FontWeight.w500),
+                    )))
                 .toList(),
             onChanged: (value) => setState(() {
                   selectedCategory = value;

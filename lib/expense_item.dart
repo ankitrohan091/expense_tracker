@@ -9,6 +9,7 @@ class Item extends StatelessWidget {
   @override
   Widget build(context) {
     return Card(
+      color: Theme.of(context).colorScheme.secondaryContainer,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 16,
@@ -19,24 +20,41 @@ class Item extends StatelessWidget {
           children: [
             Text(
               expenseItem.title,
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                  fontSize: 21,
+                  color: Theme.of(context).colorScheme.onSecondaryContainer),
             ),
             const SizedBox(
               height: 5,
             ),
             Row(
               children: [
-                const Icon(Icons.currency_rupee_sharp),
-                Text(expenseItem.amount.toStringAsFixed(2)),
+                Icon(
+                  Icons.currency_rupee_sharp,
+                  color: Theme.of(context).colorScheme.surfaceTint,
+                ),
+                Text(
+                  expenseItem.amount.toStringAsFixed(2),
+                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                      color:
+                          Theme.of(context).colorScheme.onSecondaryContainer),
+                ),
                 const Spacer(),
                 Row(
                   children: [
-                    Icon(categoryIcons[expenseItem.category]),
+                    Icon(
+                      categoryIcons[expenseItem.category],
+                      color: Theme.of(context).colorScheme.surfaceTint,
+                    ),
                     const SizedBox(
                       width: 4,
                     ),
                     Text(
                       dateFormatter.format(expenseItem.date),
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer),
                     ),
                   ],
                 ),
